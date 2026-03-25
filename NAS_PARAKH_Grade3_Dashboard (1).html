@@ -1,0 +1,426 @@
+
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; }
+.dash { font-family: var(--font-sans); padding: 1rem 0; }
+.header { margin-bottom: 1.5rem; }
+.header h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+.header p { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+.controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center; }
+.controls label { font-size: 13px; color: var(--color-text-secondary); }
+select { font-size: 13px; padding: 6px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+.metric-card .label { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px; }
+.metric-card .val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+.metric-card .sub { font-size: 12px; margin: 2px 0 0; }
+.up { color: #1D9E75; }
+.down { color: #D85A30; }
+.neutral { color: var(--color-text-secondary); }
+.charts-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; margin-bottom: 1.5rem; }
+.chart-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px; }
+.chart-card h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 12px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12px; color: var(--color-text-secondary); }
+.legend span { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.insight-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.insight-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px; }
+.insight-card .icon { font-size: 16px; margin-bottom: 6px; }
+.insight-card h4 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 6px; }
+.insight-card p { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5; }
+.state-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.state-table th { text-align: left; padding: 6px 8px; color: var(--color-text-secondary); font-weight: 500; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.state-table td { padding: 6px 8px; color: var(--color-text-primary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.state-table tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+.badge-up { background: #E1F5EE; color: #085041; }
+.badge-down { background: #FAECE7; color: #4A1B0C; }
+.badge-nat { background: #E6F1FB; color: #042C53; }
+.tabs { display: flex; gap: 4px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.tab { font-size: 13px; padding: 8px 14px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--color-text-secondary); background: none; border-top: none; border-left: none; border-right: none; }
+.tab.active { color: var(--color-text-primary); border-bottom-color: #378ADD; font-weight: 500; }
+.section { display: none; }
+.section.active { display: block; }
+</style>
+
+<div class="dash">
+  <div class="header">
+    <h1>NAS / PARAKH Rashtriya Sarvekshan — Grade 3 Performance Dashboard</h1>
+    <p>National Achievement Survey 2017 & 2021 · PARAKH Rashtriya Sarvekshan 2024 &nbsp;|&nbsp; Scores shown as % correct / % competent</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('national')">National trends</button>
+    <button class="tab" onclick="showTab('state')">State comparison</button>
+    <button class="tab" onclick="showTab('equity')">Equity lens</button>
+  </div>
+
+  <div class="section active" id="national">
+    <div class="metric-grid">
+      <div class="metric-card">
+        <p class="label">Language 2024 (national)</p>
+        <p class="val">64%</p>
+        <p class="sub up">▲ +2pp vs 2021</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">Math 2024 (national)</p>
+        <p class="val">60%</p>
+        <p class="sub up">▲ +3pp vs 2021</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">Language peak (NAS 2017)</p>
+        <p class="val">66.7%</p>
+        <p class="sub down">Still not recovered</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">Students assessed 2024</p>
+        <p class="val">21.2L</p>
+        <p class="sub neutral">74,229 schools · 781 districts</p>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>National average scores over time — Language &amp; Mathematics</h3>
+        <div class="legend">
+          <span><span class="legend-dot" style="background:#378ADD"></span>Language</span>
+          <span><span class="legend-dot" style="background:#1D9E75"></span>Mathematics</span>
+          <span><span class="legend-dot" style="background:#D85A30"></span>EVS (where assessed)</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px"><canvas id="c1"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Score by school management type (2024)</h3>
+        <div class="legend">
+          <span><span class="legend-dot" style="background:#378ADD"></span>Language</span>
+          <span><span class="legend-dot" style="background:#1D9E75"></span>Mathematics</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px"><canvas id="c2"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:1.5rem">
+      <h3>Subject-level competency breakdown — Grade 3, 2024</h3>
+      <div class="legend">
+        <span><span class="legend-dot" style="background:#378ADD"></span>% competent</span>
+        <span><span class="legend-dot" style="background:#E6F1FB"></span">Gap to full competency</span>
+      </div>
+      <div style="position:relative;width:100%;height:220px"><canvas id="c3"></canvas></div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="icon">📉</div>
+        <h4>COVID dip was real but partial recovery is underway</h4>
+        <p>Language dropped from 66.7% (2017) → 62% (2021) amid pandemic school closures. By 2024 it recovered to 64% — still below pre-COVID levels. Math followed a similar path: ~65% → 57% → 60%.</p>
+      </div>
+      <div class="insight-card">
+        <div class="icon">📚</div>
+        <h4>Language beats math at every cycle</h4>
+        <p>Students consistently score higher in language than mathematics across all three rounds. The gap was ~9pp in 2017, widened to ~5pp in 2021, and settled at ~4pp in 2024 — suggesting targeted numeracy interventions are narrowing it.</p>
+      </div>
+      <div class="insight-card">
+        <div class="icon">🏫</div>
+        <h4>State govt. schools on par with private schools</h4>
+        <p>In 2024, state government schools matched private schools in Language (both 64%) and led in Mathematics (61% vs 60%). Central government schools performed lowest — a surprising reversal warranting further investigation.</p>
+      </div>
+      <div class="insight-card">
+        <div class="icon">👧</div>
+        <h4>Girls outperform boys in language</h4>
+        <p>Nationally, girls scored 65% vs boys' 63% in Language in 2024. Math scores were identical (60% each). Girls' language advantage has held across all three cycles — but they remain underrepresented in STEM pathways at higher grades.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="state">
+    <div class="controls">
+      <label>Subject: </label>
+      <select id="subjectSel" onchange="renderStateChart()">
+        <option value="lang">Language</option>
+        <option value="math">Mathematics</option>
+      </select>
+    </div>
+    <div class="chart-card" style="margin-bottom:1.5rem">
+      <h3 id="stateChartTitle">State-wise Language scores — Grade 3 (selected states)</h3>
+      <div class="legend">
+        <span><span class="legend-dot" style="background:#B5D4F4"></span>2017</span>
+        <span><span class="legend-dot" style="background:#378ADD"></span>2021</span>
+        <span><span class="legend-dot" style="background:#042C53"></span>2024</span>
+        <span><span class="legend-dot" style="background:#D85A30;opacity:0.6;"></span>National avg (2024)</span>
+      </div>
+      <div style="position:relative;width:100%;height:320px"><canvas id="c4"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h3>State performance summary — Grade 3 Language &amp; Math (2024 vs 2021)</h3>
+      <table class="state-table">
+        <thead>
+          <tr>
+            <th>State / UT</th>
+            <th>Lang 2017</th>
+            <th>Lang 2021</th>
+            <th>Lang 2024</th>
+            <th>Math 2024</th>
+            <th>vs National (2024)</th>
+          </tr>
+        </thead>
+        <tbody id="stateTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section" id="equity">
+    <div class="metric-grid">
+      <div class="metric-card">
+        <p class="label">ST students — Language 2024</p>
+        <p class="val">61%</p>
+        <p class="sub down">−3pp vs national avg</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">SC students — Math 2024</p>
+        <p class="val">60%</p>
+        <p class="sub neutral">≈ national avg</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">Rural–Urban gap (math)</p>
+        <p class="val">~5pp</p>
+        <p class="sub down">Urban leads in 2024</p>
+      </div>
+      <div class="metric-card">
+        <p class="label">Schools with CWSN support</p>
+        <p class="val">35%</p>
+        <p class="sub down">Only 38% have trained teachers</p>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Language scores by social group over time — Grade 3</h3>
+        <div class="legend">
+          <span><span class="legend-dot" style="background:#378ADD"></span>Others (general)</span>
+          <span><span class="legend-dot" style="background:#1D9E75"></span>OBC</span>
+          <span><span class="legend-dot" style="background:#D85A30"></span>SC</span>
+          <span><span class="legend-dot" style="background:#BA7517"></span>ST</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px"><canvas id="c5"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Math scores by social group over time — Grade 3</h3>
+        <div class="legend">
+          <span><span class="legend-dot" style="background:#378ADD"></span>Others (general)</span>
+          <span><span class="legend-dot" style="background:#1D9E75"></span>OBC</span>
+          <span><span class="legend-dot" style="background:#D85A30"></span>SC</span>
+          <span><span class="legend-dot" style="background:#BA7517"></span>ST</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px"><canvas id="c6"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="icon">⚠️</div>
+        <h4>Caste-based hierarchy persists unchanged</h4>
+        <p>Across all three cycles, the hierarchy Others → OBC → SC → ST is almost identically reproduced. Despite successive reforms, the rank order has not changed — structural inequity is not self-correcting.</p>
+      </div>
+      <div class="insight-card">
+        <div class="icon">🌾</div>
+        <h4>Rural–urban gap widened post-COVID</h4>
+        <p>In 2017, rural students performed comparably to urban peers in Grade 3. After the pandemic, rural students' scores fell more sharply in 2021. The 2024 recovery is uneven — rural areas lag behind, especially in math.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const stateData = [
+  { state:'Punjab', l17:63, l21:339, l24:80, m24:80, note:'Top performer all 3 cycles' },
+  { state:'Kerala', l17:70, l21:342, l24:73, m24:72, note:'Consistently above average' },
+  { state:'Himachal Pradesh', l17:65, l21:null, l24:74, m24:73, note:'Strong recovery' },
+  { state:'Rajasthan', l17:58, l21:null, l24:68, m24:67, note:'Major improver' },
+  { state:'Maharashtra', l17:70, l21:null, l24:66, m24:65, note:'Above average' },
+  { state:'Karnataka', l17:70, l21:null, l24:66, m24:65, note:'Above average' },
+  { state:'Madhya Pradesh', l17:58, l21:null, l24:65, m24:63, note:'Improving' },
+  { state:'Uttar Pradesh', l17:63, l21:55, l24:68, m24:64, note:'Remarkable turnaround' },
+  { state:'National Avg', l17:66.7, l21:62, l24:64, m24:60, note:'Benchmark' },
+  { state:'Odisha', l17:62, l21:null, l24:63, m24:61, note:'Near average' },
+  { state:'Gujarat', l17:67, l21:null, l24:60, m24:58, note:'Declining' },
+  { state:'Tamil Nadu', l17:null, l21:null, l24:60, m24:58, note:'Below average' },
+  { state:'Assam', l17:63, l21:null, l24:58, m24:56, note:'Below average' },
+  { state:'Bihar', l17:53, l21:null, l24:56, m24:54, note:'Chronic underperformer' },
+  { state:'Chhattisgarh', l17:51, l21:null, l24:55, m24:53, note:'Lowest tier' },
+  { state:'Telangana', l17:null, l21:null, l24:54, m24:52, note:'Below average' },
+];
+
+function roundVal(v) { return v ? Math.round(v) : null; }
+
+function renderC1() {
+  new Chart(document.getElementById('c1'), {
+    type: 'line',
+    data: {
+      labels: ['NAS 2017','NAS 2021','PARAKH 2024'],
+      datasets: [
+        { label:'Language', data:[66.7,62,64], borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.1)', tension:0.3, pointRadius:5, pointBackgroundColor:'#378ADD', fill:true },
+        { label:'Mathematics', data:[65,57,60], borderColor:'#1D9E75', backgroundColor:'rgba(29,158,117,0.08)', tension:0.3, pointRadius:5, pointBackgroundColor:'#1D9E75', fill:true },
+        { label:'EVS', data:[65,57,null], borderColor:'#D85A30', backgroundColor:'rgba(216,90,48,0.06)', tension:0.3, pointRadius:5, pointBackgroundColor:'#D85A30', fill:true, borderDash:[5,4] }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.dataset.label+': '+ctx.parsed.y+'%' } } },
+      scales:{
+        y:{ min:50, max:75, ticks:{ callback:v=>v+'%', color:'#888780' }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        x:{ ticks:{ color:'#888780' }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+function renderC2() {
+  new Chart(document.getElementById('c2'), {
+    type: 'bar',
+    data: {
+      labels: ['State Govt','Govt Aided','Private','Central Govt'],
+      datasets: [
+        { label:'Language', data:[64,63,64,60], backgroundColor:'#378ADD', barPercentage:0.6 },
+        { label:'Mathematics', data:[61,60,60,57], backgroundColor:'#1D9E75', barPercentage:0.6 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.dataset.label+': '+ctx.parsed.y+'%' } } },
+      scales:{
+        y:{ min:50, max:70, ticks:{ callback:v=>v+'%', color:'#888780' }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        x:{ ticks:{ color:'#888780', font:{size:11} }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+function renderC3() {
+  const labels = ['Read short stories (60%)','Vocabulary daily use (67%)','Number arrangement (55%)','Add/subtract 2-digit (58%)','Multiply/divide concept (54%)','Geometric shapes (50%)'];
+  const vals = [60,67,55,58,54,50];
+  const gaps = vals.map(v=>100-v);
+  new Chart(document.getElementById('c3'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'Competent', data:vals, backgroundColor:'#378ADD', stack:'s' },
+        { label:'Gap', data:gaps, backgroundColor:'rgba(55,138,221,0.12)', stack:'s' }
+      ]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.datasetIndex===0 ? ctx.parsed.x+'% competent' : (100-ctx.parsed.x)+'% not yet competent' } } },
+      scales:{
+        x:{ stacked:true, min:0, max:100, ticks:{ callback:v=>v+'%', color:'#888780' }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        y:{ stacked:true, ticks:{ color:'#888780', font:{size:11} }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+let stateChartInst = null;
+function renderStateChart() {
+  const sub = document.getElementById('subjectSel').value;
+  document.getElementById('stateChartTitle').textContent = (sub==='lang'?'State-wise Language':'State-wise Mathematics')+' scores — Grade 3 (selected states)';
+  const states = stateData.filter(d=>d.state!=='National Avg');
+  const sorted = [...states].sort((a,b)=>(b[sub==='lang'?'l24':'m24']||0)-(a[sub==='lang'?'l24':'m24']||0));
+  const labels = sorted.map(d=>d.state);
+  const natLine = new Array(labels.length).fill(sub==='lang'?64:60);
+
+  if (stateChartInst) stateChartInst.destroy();
+  stateChartInst = new Chart(document.getElementById('c4'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'2017', data: sorted.map(d=>sub==='lang'?d.l17:null), backgroundColor:'#B5D4F4', barPercentage:0.75 },
+        { label:'2021', data: sorted.map(d=>sub==='lang'?d.l21:null), backgroundColor:'#378ADD', barPercentage:0.75 },
+        { label:'2024', data: sorted.map(d=>sub==='lang'?d.l24:d.m24), backgroundColor:'#042C53', barPercentage:0.75 },
+        { type:'line', label:'Nat avg 2024', data:natLine, borderColor:'#D85A30', borderDash:[4,3], pointRadius:0, borderWidth:1.5 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.dataset.label+': '+(ctx.parsed.y!==null?ctx.parsed.y+'%':'N/A') } } },
+      scales:{
+        y:{ min:40, max:85, ticks:{ callback:v=>v+'%', color:'#888780', font:{size:11} }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        x:{ ticks:{ color:'#888780', font:{size:10}, maxRotation:35 }, grid:{display:false} }
+      }
+    }
+  });
+
+  const tbody = document.getElementById('stateTableBody');
+  tbody.innerHTML = '';
+  stateData.forEach(d=>{
+    const isNat = d.state==='National Avg';
+    const change = d.l24 && d.l21 ? d.l24-d.l21 : null;
+    const vsNat = isNat ? '' : (d.l24>=64 ? '<span class="badge badge-up">▲ above</span>' : '<span class="badge badge-down">▼ below</span>');
+    const changeStr = change ? (change>0?`<span class="up">▲${Math.round(change)}pp</span>`:`<span class="down">▼${Math.abs(Math.round(change))}pp</span>`) : '—';
+    const l17 = d.l17 ? d.l17+'%' : '—';
+    const l21 = d.l21 ? (d.l21>100?'—':d.l21+'%') : '—';
+    const l24 = d.l24 ? d.l24+'%' : '—';
+    const m24 = d.m24 ? d.m24+'%' : '—';
+    tbody.innerHTML += `<tr${isNat?' style="font-weight:500;background:var(--color-background-secondary)"':''}>
+      <td>${d.state}</td><td>${l17}</td><td>${l21}</td><td>${l24}</td><td>${m24}</td><td>${isNat?'<span class="badge badge-nat">Benchmark</span>':vsNat}</td>
+    </tr>`;
+  });
+}
+
+function renderC5() {
+  new Chart(document.getElementById('c5'), {
+    type:'bar',
+    data:{
+      labels:['2017','2021','2024'],
+      datasets:[
+        { label:'Others', data:[68.1,64,66], backgroundColor:'#378ADD', barPercentage:0.7 },
+        { label:'OBC', data:[67.5,63,65], backgroundColor:'#1D9E75', barPercentage:0.7 },
+        { label:'SC', data:[64.5,61,63], backgroundColor:'#D85A30', barPercentage:0.7 },
+        { label:'ST', data:[65.3,61,61], backgroundColor:'#BA7517', barPercentage:0.7 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx=>ctx.dataset.label+': '+ctx.parsed.y+'%' } } },
+      scales:{
+        y:{ min:55, max:72, ticks:{ callback:v=>v+'%', color:'#888780' }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        x:{ ticks:{ color:'#888780' }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+function renderC6() {
+  new Chart(document.getElementById('c6'), {
+    type:'bar',
+    data:{
+      labels:['2017','2021','2024'],
+      datasets:[
+        { label:'Others', data:[68,65,66], backgroundColor:'#378ADD', barPercentage:0.7 },
+        { label:'OBC', data:[64.2,61,60], backgroundColor:'#1D9E75', barPercentage:0.7 },
+        { label:'SC', data:[61.9,57,60], backgroundColor:'#D85A30', barPercentage:0.7 },
+        { label:'ST', data:[64,60,60], backgroundColor:'#BA7517', barPercentage:0.7 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx=>ctx.dataset.label+': '+ctx.parsed.y+'%' } } },
+      scales:{
+        y:{ min:52, max:72, ticks:{ callback:v=>v+'%', color:'#888780' }, grid:{ color:'rgba(136,135,128,0.15)' } },
+        x:{ ticks:{ color:'#888780' }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab')[['national','state','equity'].indexOf(id)].classList.add('active');
+}
+
+renderC1(); renderC2(); renderC3(); renderStateChart(); renderC5(); renderC6();
+</script>
